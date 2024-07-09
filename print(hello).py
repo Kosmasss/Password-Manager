@@ -1,34 +1,29 @@
 import os
+import json
+from cryptography import Fernet
 
-def write_to_file(file_path, data):
-    try:
-        with open(file_path, 'w') as file:
-            file.write(data)
-        print("Data written to file successfully.")
-    except Exception as e:
-        print(f"An error occurred while writing to the file: {e}")
-        
+# Function to generate and save a key
+def generate_key():
+    key = Fernet.generate_key()
+    with open('key.key', 'wb') as key_file:
+        key_file.write(key)
 
+# Function to load the key
+def load_key():
+    return open('key.key', 'rb').read()
 
-def read_from_file(file_path):
-    try:
-        with open(file_path, 'r') as file:
-            data = file.read()
-        print("Data read from file successfully.")
-        return data
-    except Exception as e:
-        print(f"An error occurred while reading the file: {e}")
-        return None
-    
-search=input("search")
-file_path = 'example.txt'
+# Encrypt data
+def encrypt_data(data, key):
+    fernet = Fernet(key)
+    return fernet.encrypt(data.encode())
 
-data_from_file = read_from_file('file_path')
-if search==data_from_file :
- print(data_from_file)  
-else :
- print("Site does not exist")
- add = input("add")
- data_to_write = add
- write_to_file(file_path, data_to_write)
- 
+# Decrypt data
+def decrypt_data(data, key):
+    fernet = Fernet(key)
+    return fernet.decrypt(data).decode()
+
+# Save passwords to a file
+def save_passwords(passwords, key):
+    encrypted_data = encrypt_data(json.dumps(passwords), key)
+    with open('passwords.enc', 'wb') as file:
+        file.write(encrypted_data)
