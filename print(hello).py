@@ -51,3 +51,35 @@ def search_password(service, key):
         print(f"Password: {passwords[service]['password']}")
     else:
         print(f"No password found for service: {service}")
+
+        # Main function to interact with the password manager
+def main():
+    if not os.path.exists('key.key'):
+        print("Key not found. Generating a new key...")
+        generate_key()
+
+    key = load_key()
+
+    while True:
+        print("\nPassword Manager")
+        print("1. Add a new password")
+        print("2. Search for a password")
+        print("3. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            service = input("Enter the service: ")
+            username = input("Enter the username: ")
+            password = input("Enter the password: ")
+            add_password(service, username, password, key)
+        elif choice == '2':
+            service = input("Enter the service to search for: ")
+            search_password(service, key)
+        elif choice == '3':
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
+ 
